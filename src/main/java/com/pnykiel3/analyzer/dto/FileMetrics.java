@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnalysisResult {
-    private int loc; // lines of code
+public class FileMetrics {
+    private int linesCount; // number of lines
     private int functionCount; // number of declared functions
     private int cyclomaticComplexity;
 

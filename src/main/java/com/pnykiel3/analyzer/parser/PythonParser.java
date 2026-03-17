@@ -1,5 +1,6 @@
 package com.pnykiel3.analyzer.parser;
 
+import com.pnykiel3.analyzer.dto.FileMetrics;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -16,7 +17,9 @@ public class PythonParser implements FunctionParser {
     }
 
     @Override
-    public int countFunctions(String code) {
+    public FileMetrics analyzeMetrics(String code) {
+
+        int linesCount = countLines(code);
 
         // Python script
         String pythonAstScript =
@@ -25,13 +28,13 @@ public class PythonParser implements FunctionParser {
                         "try:\n" +
                         "    source = sys.stdin.read()\n" +
                         "    tree = ast.parse(source)\n" +
-                        "    count = sum(1 for node in ast.walk(tree) if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)))\n" +
-                        "    print(count)\n" +
+                        "    funcs = sum(1 for node in ast.walk(tree) if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)))\n" +
+                        "    comp = 1 + sum(1 for node in ast.walk(tree) if isinstance(node, (ast.If, ast.For, ast.AsyncFor, ast.While, ast.ExceptHandler)))\n" +
+                        "    print(f'{funcs},{comp}')\n" +
                         "except Exception:\n" +
-                        "    print(0)\n";
+                        "    print('0,1')\n";
 
         try {
-
             ProcessBuilder processBuilder = new ProcessBuilder("python3", "-c", pythonAstScript);
             Process process = processBuilder.start();
 
@@ -40,13 +43,15 @@ public class PythonParser implements FunctionParser {
                 os.flush();
             }
 
-
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String output = reader.readLine();
                 process.waitFor();
 
-                if (output != null) {
-                    return Integer.parseInt(output.trim());
+                if (output != null && output.contains(",")) {
+                    String[] parts = output.trim().split(",");
+                    int functionCount = Integer.parseInt(parts[0]);
+                    int complexity = Integer.parseInt(parts[1]);
+                    return new FileMetrics(linesCount, functionCount, complexity);
                 }
             }
 
@@ -54,6 +59,6 @@ public class PythonParser implements FunctionParser {
             System.err.println("Python parser error: " + e.getMessage());
         }
 
-        return 0;
+        return new FileMetrics(0, 0, 1);
     }
 }

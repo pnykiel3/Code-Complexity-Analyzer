@@ -1,6 +1,6 @@
 package com.pnykiel3.analyzer.service;
 
-import com.pnykiel3.analyzer.dto.AnalysisResult;
+import com.pnykiel3.analyzer.dto.FileMetrics;
 import com.pnykiel3.analyzer.parser.FunctionParser;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class AnalysisService {
 
-    private List<FunctionParser> parsers;
+    private final List<FunctionParser> parsers;
 
     public AnalysisService(List<FunctionParser> parsers) {
         this.parsers = parsers;
@@ -19,11 +19,10 @@ public class AnalysisService {
         if ( filename == null || !filename.contains(".") )  return "";
         return filename.substring(filename.indexOf('.')+1).toLowerCase();
     }
-    public AnalysisResult analyze(String filename, String code){
-        if (code == null || code.trim().isEmpty()) return new AnalysisResult(0,0,1);
 
-        String[] lines = code.replace("\r", "").split("\n");
-        int loc = lines.length;
+
+    public FileMetrics analyze(String filename, String code) throws Exception {
+        if (code == null || code.trim().isEmpty()) return new FileMetrics(0,0,1);
 
         String extension = getFileExtension(filename);
 
@@ -31,10 +30,9 @@ public class AnalysisService {
                 .filter(parser -> parser.supports(extension))
                 .findFirst().orElse(null);
 
-        int functionCount = 0;
+
         if (activeParser != null) {
-            functionCount = activeParser.countFunctions(code);
-        }
-        return new AnalysisResult(loc, functionCount, 1);
+            return activeParser.analyzeMetrics(code);
+        } else throw new Exception("Uploaded the file is not supported yet");
     }
 }
