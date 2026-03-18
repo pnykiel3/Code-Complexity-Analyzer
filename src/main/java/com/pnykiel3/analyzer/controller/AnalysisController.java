@@ -5,6 +5,9 @@ import com.pnykiel3.analyzer.dto.FileMetrics;
 import com.pnykiel3.analyzer.service.AnalysisService;
 import com.pnykiel3.analyzer.service.DirectoryScannerService;
 import com.pnykiel3.analyzer.service.GithubScannerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,6 +16,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
+@Tag(name = "Code analyzer", description = "Static analysis API for code complexity")
 public class AnalysisController {
 
 
@@ -27,14 +31,16 @@ public class AnalysisController {
     }
 
     @PostMapping("/analyze")
-    public FileMetrics analyze(@RequestParam("file") MultipartFile file) throws Exception {
+    @Operation(summary = "Analyze a file")
+    public FileMetrics analyze(@Parameter(description = ".java or .py source file") @RequestParam("file") MultipartFile file) throws Exception {
         String code = new String (file.getBytes());
         String filename = file.getOriginalFilename();
         return service.analyze(filename, code);
     }
 
     @GetMapping("/analyze-directory")
-    public DirectoryAnalysisResult analyzeDirectory(@RequestParam("path") String path) {
+    @Operation(summary = "Analyze a directory")
+    public DirectoryAnalysisResult analyzeDirectory(@Parameter(description = "Absolute path") @RequestParam("path") String path) {
         try {
             return directoryScannerService.scanDirectory(path);
         } catch (IOException e) {
@@ -43,11 +49,12 @@ public class AnalysisController {
     }
 
     @GetMapping("/analyze-repo")
-    public DirectoryAnalysisResult analyzeRepository(@RequestParam("url") String url) {
+    @Operation(summary = "Analyze a GitHub repository")
+    public DirectoryAnalysisResult analyzeRepository(@Parameter(description = "Public repository URL") @RequestParam("url") String url) {
         try {
             return githubScannerService.scanRepository(url);
         } catch (Exception e) {
-            throw new RuntimeException("Github fodler error: " + e.getMessage());
+            throw new RuntimeException("Github folder error: " + e.getMessage());
         }
     }
 
