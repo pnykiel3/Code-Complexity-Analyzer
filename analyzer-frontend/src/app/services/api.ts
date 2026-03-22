@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface FileMetrics {
-  lineCount: number;
+  linesCount: number;
   functionCount: number;
   cyclomaticComplexity: number;
 }
