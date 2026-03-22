@@ -1,6 +1,6 @@
 # Code Complexity Analyzer
 
-A full-stack web application that performs **static code analysis** on Java and Python source files. It calculates key software metrics — including **cyclomatic complexity**, line count, and function count — and presents them through an interactive Angular dashboard with visual charts. Supports single file upload, local directory scanning, and **GitHub repository analysis** via URL.
+A full-stack web application that performs static code analysis on Java and Python source files. It calculates key software metrics — including cyclomatic complexity, line count, and function count — and presents them through an interactive Angular dashboard with visual charts. Supports single file upload, local directory scanning, and GitHub repository analysis via URL.
 
 ---
 
@@ -29,7 +29,7 @@ A full-stack web application that performs **static code analysis** on Java and 
 
 ### Cyclomatic Complexity
 
-Cyclomatic complexity measures the number of **linearly independent paths** through a program's source code. The calculation starts at a baseline of **1** and increments for each decision point found in the code:
+Cyclomatic complexity measures the number of linearly independent paths through a program's source code. The calculation starts at a baseline of 1 and increments for each decision point found in the code:
 
 | Decision Point        | Java (AST Node)      | Python (AST Node)       |
 |----------------------|----------------------|-------------------------|
@@ -46,10 +46,10 @@ Cyclomatic complexity measures the number of **linearly independent paths** thro
 Source Code → REST API → Language Detection → Parser (Java / Python) → Metrics DTO → JSON Response → Angular Frontend
 ```
 
-1. The **controller** receives input (file upload, directory path, or GitHub URL)
-2. For GitHub repos, the backend **clones the repository** using JGit into a temp directory
-3. The **AnalysisService** selects the correct parser based on file extension (strategy pattern)
-4. The parser **walks the AST**, counts decision points, functions, and lines
+1. The controller receives input (file upload, directory path, or GitHub URL)
+2. For GitHub repos, the backend clones the repository using JGit into a temp directory
+3. The AnalysisService selects the correct parser based on file extension (strategy pattern)
+4. The parser walks the AST, counts decision points, functions, and lines
 5. Results are returned as structured JSON to the frontend
 
 ---
@@ -145,9 +145,9 @@ Navigate to `http://localhost:4200` in your browser.
 
 ```json
 {
-  "totalLines": 312,
-  "totalFunctions": 18,
-  "totalComplexity": 34,
+  "totalLines": 147,
+  "totalFunctions": 10,
+  "totalComplexity": 19,
   "files": [
     {
       "filePath": "src/main/java/com/example/UserService.java",
@@ -175,13 +175,13 @@ Navigate to `http://localhost:4200` in your browser.
 
 This project was a significant learning experience in building a real engineering tool from scratch:
 
-- **Full-stack architecture** — designing a clean separation between an Angular SPA and a Spring Boot REST API
-- **Abstract Syntax Tree (AST) parsing** — working with JavaParser and Python's `ast` module to analyze source code programmatically rather than relying on regex
-- **REST API design** — structuring endpoints, handling file uploads with `MultipartFile`, and documenting APIs with OpenAPI/Swagger
-- **Strategy pattern in practice** — implementing a `FunctionParser` interface so new language analyzers can be plugged in without modifying existing code
-- **Working with Git programmatically** — using JGit to clone and scan remote repositories
-- **Data visualization** — integrating Chart.js with Angular to present metrics in a meaningful, visual way
-- **Software quality thinking** — understanding what cyclomatic complexity actually measures and why it matters in real codebases
+- Full-stack architecture — designing a clean separation between an Angular SPA and a Spring Boot REST API
+- Abstract Syntax Tree (AST) parsing — working with JavaParser and Python's `ast` module to analyze source code programmatically rather than relying on regex
+- REST API design — structuring endpoints, handling file uploads with `MultipartFile`, and documenting APIs with OpenAPI/Swagger
+- Strategy pattern in practice — implementing a `FunctionParser` interface so new language analyzers can be plugged in without modifying existing code
+- Working with Git programmatically — using JGit to clone and scan remote repositories
+- Data visualization — integrating Chart.js with Angular to present metrics in a meaningful, visual way
+- Software quality thinking — understanding what cyclomatic complexity actually measures and why it matters in real codebases
 
 ---
 
@@ -199,8 +199,8 @@ This project was a significant learning experience in building a real engineerin
 ## About Me
 
 I'm a Computer Science student with a strong interest in backend development and building tools that solve real problems. I enjoy digging into how software works under the hood — from parsing ASTs to designing clean APIs. I'm actively building projects, learning new technologies, and looking for opportunities to grow as a software engineer. This project was created to help me learn more about frontend development especially Angular.
-**I am open to internship opportunities**
-[LinkedIn](https://www.linkedin.com/in/pawelnykiel/)
+**I am open to internship opportunities**  
+[LinkedIn](https://www.linkedin.com/in/pawelnykiel/)  
 <p.nykiel@icloud.com>
 ---
 
